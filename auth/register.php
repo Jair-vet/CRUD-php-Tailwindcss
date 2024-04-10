@@ -9,45 +9,43 @@
 <body class="bg-slate-800">
 
 <?php
-  include "../db.php";
-  
-  //print_r($_FILES); // verificar lo que trae post  por medio del arreglo.
+	include "../db.php";
+	if(!empty($_POST))
+	{
+    // print_r($_POST);
+		$alert=' ';
+		if (empty($_POST['nombre']) || empty($_POST['correo']) || empty($_POST['password'])) 
+		{
+			$alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Todos los campos son obligatorios.</p>';
+		}else{
 
-  if(!empty($_POST))
-    {
-      $alert=' ';
-      if (empty($_POST['nombre']) || empty($_POST['correo']) || empty($_POST['password']) || empty($_POST['rol'])) 
-      {
-        $alert='<p class="text-red-600 bg-red-200 p-2 uppercase rounded-lg">Todos los campos son obligatorios.</p>';
-      }else{
+			$nombre = $_POST['nombre'];
+			$email  = $_POST['correo'];
+			$clave  = md5($_POST['password']);
+			$rol    = $_POST['rol'];
 
-        $nombre   = $_POST['nombre'];
-        $email   = $_POST['correo'];
-        $password = md5($_POST['password']);
-        $rol      = $_POST['rol'];
+			$query = mysqli_query($conection, "SELECT * FROM user WHERE correo = '$email'");
+			$result = mysqli_fetch_array($query);
 
-        $query = mysqli_query($conection, "SELECT * FROM user WHERE correo = '$email'");
-        $result = mysqli_fetch_array($query);
+			if($result > 0){
+				$alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">El correo o el usuario ya existe.</p>';
+			}else{
 
-        if($result > 0){
-          $alert='<p class="text-red-600 bg-red-200 p-2 uppercase rounded-lg">El correo o el usuario ya existe.</p>';
-        }else{
+				$query_insert = mysqli_query($conection, "INSERT INTO user(nombre,correo,password,rol)
+					       									VALUES('$nombre','$email','$clave','$rol')"
+                                );
 
-          $query_insert = mysqli_query($conection, "INSERT INTO user(
-                                nombre,correo,password)
-                                    VALUES('$nombre','$email','$password')"
-                              );
+				if($query_insert){
+					$alert='<p class="mt-2 bg-green-200 text-green-700 p-2 rounded-md uppercase text-center">Usuario creado Correctamente.</p>';
+          header('location: ../src/users.php');
+				}else{
+					$alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Error al crear el usuario.</p>';
+				}
+			}
+ 
+		}
+	}
 
-          if($query_insert){
-            $alert='<p class="text-green-700 text-center bg-green-300 rounded-md p-2 mb-2 uppercase">Usuario creado Correctamente.</p>';
-            header('Location: ../src/users.php');
-          }else{
-            $alert='<p class="msg_error">Error al crear el usuario.</p>';
-          }
-        }
-  
-      }
-    }
 ?>
 
 <section class="max-w-4xl mx-auto py-20 px-5 p-10">
@@ -57,11 +55,10 @@
         <!-- Formulario -->
         <form 
           class='my-10 bg-gray-400 shadow-xl rounded-lg px-10 py-5'
-          method="POST"
+          method="post"
           action="" 
           enctype="multipart/form-data"
         >
-          <div><?php echo isset($alert) ? $alert: ' '; ?></div>
           <!-- Nombre -->
           <div>
             <label 
@@ -130,11 +127,13 @@
               ?>
             </select>
           </div>
+          <!-- Alerta  -->
+          <div class="alert"><?php echo isset($alert) ? $alert : ' '; ?></div>	
+
           <!-- Boton enviar -->
           <input 
             type="submit" 
             value="Crear Usuario"
-            name="save_user"
             class='bg-sky-700 w-full mt-10 py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-sky-900 transition-colors mb-5'
           >
 
