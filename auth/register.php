@@ -10,7 +10,8 @@
 
 <?php
   include "../db.php";
-  print_r($_FILES); // verificar lo que trae post  por medio del arreglo.
+  
+  //print_r($_FILES); // verificar lo que trae post  por medio del arreglo.
 
   if(!empty($_POST))
     {
@@ -21,8 +22,8 @@
       }else{
 
         $nombre   = $_POST['nombre'];
-        $correo   = $_POST['correo'];
-        $password = $_POST['password'];
+        $email   = $_POST['correo'];
+        $password = md5($_POST['password']);
         $rol      = $_POST['rol'];
 
         $query = mysqli_query($conection, "SELECT * FROM user WHERE correo = '$email'");
@@ -33,12 +34,13 @@
         }else{
 
           $query_insert = mysqli_query($conection, "INSERT INTO user(
-                                nombre,correo,password,rol)
-                                    VALUES('$nombre','$email','$password','$rol')"
+                                nombre,correo,password)
+                                    VALUES('$nombre','$email','$password')"
                               );
 
           if($query_insert){
-            $alert='<p class="msg_save">Usuario creado Correctamente.</p>';
+            $alert='<p class="text-green-700 text-center bg-green-300 rounded-md p-2 mb-2 uppercase">Usuario creado Correctamente.</p>';
+            header('Location: ../src/users.php');
           }else{
             $alert='<p class="msg_error">Error al crear el usuario.</p>';
           }
@@ -51,8 +53,15 @@
 <section class="max-w-4xl mx-auto py-20 px-5 p-10">
         <!-- Titulo -->
         <h2 class="text-4xl text-gray-400 text-center uppercase block font-bold">Registrarse</h2>
+        
         <!-- Formulario -->
-        <form class='my-10 bg-gray-400 shadow-xl rounded-lg px-10 py-5'>
+        <form 
+          class='my-10 bg-gray-400 shadow-xl rounded-lg px-10 py-5'
+          method="POST"
+          action="" 
+          enctype="multipart/form-data"
+        >
+          <div><?php echo isset($alert) ? $alert: ' '; ?></div>
           <!-- Nombre -->
           <div>
             <label 
@@ -62,6 +71,7 @@
             <input
               id='nombre'
               type='nombre'
+              name="nombre"
               placeholder='Escribe tu Nombre'
               class='w-full mt-1 p-2 border rounded-lg bg-gray-200'
             />
@@ -75,6 +85,7 @@
             <input
               id='correo'
               type='correo'
+              name="correo"
               placeholder='Escribe tu Correo'
               class='w-full mt-1 p-2 border rounded-lg bg-gray-200'
             />
@@ -88,6 +99,7 @@
             <input
               id='password'
               type='password'
+              name="password"
               placeholder='Escribe tu Password'
               class='w-full mt-1 p-2 border rounded-lg bg-gray-200'
             />
@@ -119,10 +131,12 @@
             </select>
           </div>
           <!-- Boton enviar -->
-          <button 
+          <input 
             type="submit" 
+            value="Crear Usuario"
+            name="save_user"
             class='bg-sky-700 w-full mt-10 py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-sky-900 transition-colors mb-5'
-          >Crear Usuario</button>
+          >
 
         </form>
         <div class="text-center flex justify-center">
