@@ -28,19 +28,27 @@
 			$result = mysqli_fetch_array($query);
 
 			if($result > 0){
-				$alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">El correo o el usuario ya existe.</p>';
+        $alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">El correo ya existe</p>';
 			}else{
+        // Validacion Expresión regular correo
+        $matches = null;
+        if(1 === preg_match('/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/', "$email", $matches)){
+          
+          $query_insert = mysqli_query($conection, "INSERT INTO user(nombre,correo,password,rol)
+                                     VALUES('$nombre','$email','$clave','$rol')"
+                                  );
 
-				$query_insert = mysqli_query($conection, "INSERT INTO user(nombre,correo,password,rol)
-					       									VALUES('$nombre','$email','$clave','$rol')"
-                                );
+          if($query_insert){
+            $alert='<p class="mt-2 bg-green-200 text-green-700 p-2 rounded-md uppercase text-center">Usuario creado Correctamente.</p>';
+            header('location: ../src/users.php');
 
-				if($query_insert){
-					$alert='<p class="mt-2 bg-green-200 text-green-700 p-2 rounded-md uppercase text-center">Usuario creado Correctamente.</p>';
-          header('location: ../src/users.php');
-				}else{
-					$alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Error al crear el usuario.</p>';
-				}
+          }else{
+            $alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Error al crear el usuario</p>';
+          }
+
+        } else {
+          $alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Error Correo invalido</p>';
+        }
 			}
  
 		}
