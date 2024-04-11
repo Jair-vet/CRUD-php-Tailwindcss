@@ -7,38 +7,46 @@ if(!empty($_SESSION['active']))
 	header('location: src/users.php');
 }else{
 
-		if(!empty($_POST))
-		{ 
-			if(empty($_POST['correo']) || empty($_POST['password']))
-			{
+		if(!empty($_POST)) { 
+			if(empty($_POST['correo']) || empty($_POST['password'])){
 				$alert = '<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Ingrese Correo y Password</p>';
 			}else{
-
-				require_once "db.php";
-
+        
+        require_once "db.php";  // Concexión DB
+        
+        //  Guardamos Valores
 				$user = mysqli_real_escape_string($conection, $_POST['correo']);
 				$pass = md5(mysqli_real_escape_string($conection,$_POST['password']));
 
-				$query = mysqli_query($conection, "SELECT * FROM user WHERE correo = '$user' AND password = '$pass' AND estatus = 1");
-				mysqli_close($conection);
-				$result = mysqli_num_rows($query);
-
-				if($result > 0)
-				{
-					$data = mysqli_fetch_array($query);
-					$_SESSION['active'] = true;
-					$_SESSION['id']     = $data['idusuario'];
-					$_SESSION['nombre'] = $data['nombre'];
-					$_SESSION['correo'] = $data['correo'];
-					$_SESSION['rol']    = $data['rol'];
-					$_SESSION['estatus']= $data['estatus'];
-
-					header('location: src/users.php');
-				}else{
+        // Validación expresión regular correo
+        $matches = null;
+        if(1 === preg_match('/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/', "$user", $matches)){
+          
+          $query = mysqli_query($conection, "SELECT * FROM user WHERE correo = '$user' AND password = '$pass' AND estatus = 1");
+          mysqli_close($conection);
+          $result = mysqli_num_rows($query);
+          
+          // Le mandamos la data a la Session 
+          if($result > 0)
+          {
+            $data = mysqli_fetch_array($query);
+            $_SESSION['active'] = true;
+            $_SESSION['id']     = $data['idusuario'];
+            $_SESSION['nombre'] = $data['nombre'];
+            $_SESSION['correo'] = $data['correo'];
+            $_SESSION['rol']    = $data['rol'];
+            $_SESSION['estatus']= $data['estatus'];
+  
+            header('location: src/users.php');
+        } else{
 					$alert = '<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">El correo o la clave son incorrectos</p>';
 					session_destroy();
 				}
-			}
+			}else{
+        $alert = '<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">El correo o la clave son incorrectos</p>';
+        session_destroy();
+      }
+      }
 		}
 	}
 

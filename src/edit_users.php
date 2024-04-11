@@ -6,6 +6,11 @@
 	// { 
 	// 	header("location: ./");
 	// }
+    
+    // Validar si esta Logueado o no
+    if(empty($_SESSION['active'])){
+	    header('location: ../');
+    }
 
 	if(!empty($_POST))
 	{

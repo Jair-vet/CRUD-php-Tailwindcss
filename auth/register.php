@@ -10,47 +10,49 @@
 
 <?php
 	include "../db.php";
-	if(!empty($_POST))
-	{
-    // print_r($_POST);
+	if(!empty($_POST)){
+
 		$alert=' ';
-		if (empty($_POST['nombre']) || empty($_POST['correo']) || empty($_POST['password'])) 
-		{
-			$alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Todos los campos son obligatorios.</p>';
-		}else{
+		if (empty($_POST['nombre']) || empty($_POST['correo']) || empty($_POST['password'])) {
+		
+      $alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Todos los campos son obligatorios.</p>';
+		
+    } else{
 
 			$nombre = $_POST['nombre'];
 			$email  = $_POST['correo'];
 			$clave  = md5($_POST['password']);
 			$rol    = $_POST['rol'];
 
-			$query = mysqli_query($conection, "SELECT * FROM user WHERE correo = '$email'");
-			$result = mysqli_fetch_array($query);
+      // Validación expresión regular correo
+      $matches = null;
+      if(1 === preg_match('/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/', "$email", $matches)){
+       
+        // Consulta DB
+        $query = mysqli_query($conection, "SELECT * FROM user WHERE correo = '$email'");
+			  $result = mysqli_fetch_array($query);
 
-			if($result > 0){
-        $alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">El correo ya existe</p>';
-			}else{
-        // Validacion Expresión regular correo
-        $matches = null;
-        if(1 === preg_match('/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/', "$email", $matches)){
-          
-          $query_insert = mysqli_query($conection, "INSERT INTO user(nombre,correo,password,rol)
-                                     VALUES('$nombre','$email','$clave','$rol')"
-                                  );
-
+        // Si el hay mas de 1 resultado - correo existe
+        if($result > 0){
+          $alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">El correo ya existe</p>';
+        } else{
+          // Insertamos al nuevo usuario
+          $query_insert = mysqli_query($conection, 
+                "INSERT INTO user(nombre,correo,password,rol) 
+                VALUES('$nombre','$email','$clave','$rol')"
+          );
+          // Validamos si se crea el usuario
           if($query_insert){
             $alert='<p class="mt-2 bg-green-200 text-green-700 p-2 rounded-md uppercase text-center">Usuario creado Correctamente.</p>';
-            header('location: ../src/users.php');
+            header('location: ../src/users.php'); // Redireccionamos 
 
           }else{
             $alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Error al crear el usuario</p>';
           }
-
-        } else {
-          $alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Error Correo invalido</p>';
         }
-			}
- 
+      } else {
+        $alert='<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Error Correo invalido</p>';
+      }
 		}
 	}
 
