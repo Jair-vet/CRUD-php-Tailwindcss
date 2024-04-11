@@ -19,7 +19,7 @@ if(!empty($_SESSION['active']))
 				$user = mysqli_real_escape_string($conection, $_POST['correo']);
 				$pass = md5(mysqli_real_escape_string($conection,$_POST['password']));
 
-				$query = mysqli_query($conection, "SELECT * FROM user WHERE correo = '$user' AND password = '$pass'");
+				$query = mysqli_query($conection, "SELECT * FROM user WHERE correo = '$user' AND password = '$pass' AND estatus = 1");
 				mysqli_close($conection);
 				$result = mysqli_num_rows($query);
 

@@ -4,6 +4,11 @@
     if(empty($_SESSION['active'])){
 	    header('location: ../');
     }
+	if($_SESSION['estatus'] != 1 ){ // Si el Usuario no existe
+        session_unset();
+        session_destroy();
+		header("location: ../");
+	}
 	// if($_SESSION['rol'] != 1 ) // Solo Administrador puede ver esto
 	// { 
 	// 	header("location: ./");
@@ -79,7 +84,7 @@
                     > Editar</a>
                     <a 
                         class="w-full duration-300 bg-red-600 hover:bg-red-700 text-white uppercase font-bold rounded-md p-2"  
-                        href="src/delete_users.php?id=<?php echo $data['id']; ?>"
+                        href="delete_users.php?id=<?php echo $data['id']; ?>"
                     > Eliminar</a>
                 </td>
             <?php } ?>
@@ -91,11 +96,4 @@
     ?>
     </table>
 </body>
-
-<script>
-    $(document).ready(function(){
-        $("#tabla").load('tabla.php');
-    })
-</script>
-
 </html>
