@@ -67,7 +67,7 @@
                                   );
 
           if($query_insert){
-            $alert='<p class="mt-2 bg-green-200 text-green-700 p-2 rounded-md uppercase text-center">Usuario creado Correctamente.</p>';
+            $alert= '<p class="mt-2 bg-green-200 text-green-700 p-2 rounded-md uppercase text-center">Usuario creado Correctamente.</p>';
             header('location: ../src/users.php');
 
           }else{
@@ -87,7 +87,7 @@
 <section class="max-w-4xl mx-auto py-20 px-5 p-10">
         <!-- Titulo -->
         <h2 class="text-4xl text-gray-400 text-center uppercase block font-bold">Registra un nuevo Usuario</h2>
-        
+        <hr>
         <!-- Formulario -->
         <form 
           class='my-10 bg-gray-400 shadow-xl rounded-lg px-10 py-5'

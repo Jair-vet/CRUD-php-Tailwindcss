@@ -42,7 +42,7 @@
     
     <div class="flex justify-center text-center mt-10">
         <a class="w-1/2 duration-300 bg-green-600 hover:bg-green-700 text-white uppercase font-bold rounded-md p-2" 
-        href="src/edit_users.php?id=<?php echo $data['id']; ?>"
+            href="add_users.php"
         > Agregar</a>
     </div>
     
@@ -75,7 +75,7 @@
             <?php if($_SESSION['rol'] === 'Administrador'){ ?>
                 <td class="flex">
                     <a class="w-full duration-300 bg-violet-600 hover:bg-violet-700 text-white uppercase font-bold rounded-md p-2" 
-                        href="src/edit_users.php?id=<?php echo $data['id']; ?>"
+                        href="edit_users.php?id=<?php echo $data['id']; ?>"
                     > Editar</a>
                     <a 
                         class="w-full duration-300 bg-red-600 hover:bg-red-700 text-white uppercase font-bold rounded-md p-2"  

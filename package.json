@@ -6,5 +6,8 @@
   },
   "scripts": {
     "dev": "tailwindcss build css/styles.css -o public/css/styles.css --watch"
+  },
+  "dependencies": {
+    "sweetalert2": "^11.10.7"
   }
 }

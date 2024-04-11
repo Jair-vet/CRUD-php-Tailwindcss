@@ -11,7 +11,7 @@ if(!empty($_SESSION['active']))
 		{ 
 			if(empty($_POST['correo']) || empty($_POST['password']))
 			{
-				$alert = 'Ingrese su usuario y su clave';
+				$alert = '<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">Ingrese Correo y Password</p>';
 			}else{
 
 				require_once "db.php";
@@ -35,7 +35,7 @@ if(!empty($_SESSION['active']))
 
 					header('location: src/users.php');
 				}else{
-					$alert = 'El correo o la clave son incorrectos' ;
+					$alert = '<p class="mt-2 bg-red-200 text-red-700 p-2 rounded-md uppercase text-center">El correo o la clave son incorrectos</p>';
 					session_destroy();
 				}
 			}
