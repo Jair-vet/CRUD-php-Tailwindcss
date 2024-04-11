@@ -27,20 +27,9 @@
 </head>     
 </head>
 <body class="bg-slate-200">
-    <header>
-        <div class="bg-slate-700 w-full p-5 flex justify-end">
-            <div class="text-start mr-4">
-                <p class="text-3xl font-bold text-white">Bienvenid@: <span class="text-green-500"><?php echo $_SESSION['nombre']; ?></span></p>
-                <p class="text-3xl font-bold text-white">Rol: <span class="text-green-500"><?php echo $_SESSION['rol']; ?></span></p>
-            </div>
-            <div class="flex items-center">
-                <a
-                    href="../auth/logout.php"
-                    class="shadow-xl rounded-md duration-300 uppercase bg-slate-700 hover:bg-red-600 p-3 text-white font-bold"
-                >salir</a>
-            </div>
-        </div>
-    </header>
+    
+    <!-- Header -->
+ 	<?php include("../assets/header.php")?>
       
           
     <h2 class="text-4xl mt-10 text-gray-400 text-center uppercase block font-bold">Usuarios Registrados</h2>
